@@ -20,7 +20,7 @@
           />
         </div>
         <p class="ui red tag label" v-if="formError?.error">
-          {{formError?.error}}
+          {{ formError?.error }}
         </p>
         <button
           type="submit"
@@ -36,11 +36,12 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import * as Yup from "yup";
 import { useRouter } from "vue-router";
 import BasicLayout from "../layouts/BasicLayout.vue";
 import { loginApi } from "../api/user";
+import { setTokenApi, getTokenApi } from "../api/token";
 
 export default {
   name: "Login",
@@ -52,6 +53,11 @@ export default {
     let formError = ref({});
     let loading = ref(false);
     const router = useRouter();
+    const token = getTokenApi();
+
+    onMounted(() => {
+      if (token) return router.push("/");
+    });
 
     const schemaForm = Yup.object().shape({
       identifier: Yup.string().required(true),
@@ -68,9 +74,10 @@ export default {
         try {
           const response = await loginApi(formData.value);
           if (!response?.jwt) throw "El usuario o contraseña no son correctos";
+          setTokenApi(response.jwt);
           router.push("/");
         } catch (error) {
-          formError.value = {error};
+          formError.value = { error };
           console.log(error);
         }
       } catch (error) {
