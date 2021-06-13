@@ -19,6 +19,9 @@
             :class="{ error: formError.password }"
           />
         </div>
+        <p class="ui red tag label" v-if="formError?.error">
+          {{formError?.error}}
+        </p>
         <button
           type="submit"
           class="ui button fluid primary"
@@ -67,6 +70,7 @@ export default {
           if (!response?.jwt) throw "El usuario o contraseña no son correctos";
           router.push("/");
         } catch (error) {
+          formError.value = {error};
           console.log(error);
         }
       } catch (error) {
