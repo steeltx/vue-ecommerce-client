@@ -30,12 +30,20 @@
 </template>
 
 <script>
+import { ref, onMounted } from "vue";
 import { getTokenApi, deleteTokenApi } from "../api/token";
+import { getCategoriesApi } from "../api/category";
 
 export default {
   name: "Menu",
   setup() {
     const token = getTokenApi();
+    let categories = ref(null);
+
+    onMounted(async () => {
+      const response = await getCategoriesApi();
+      categories.value = response;
+    });
 
     const logout = () => {
       deleteTokenApi();
@@ -45,6 +53,7 @@ export default {
     return {
       token,
       logout,
+      categories
     };
   },
 };
