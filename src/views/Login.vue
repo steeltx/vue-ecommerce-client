@@ -2,14 +2,30 @@
   <BasicLayout>
     <div class="login">
       <h2>Iniciar sesión</h2>
-      <form class="ui form">
+      <form class="ui form" @submit.prevent="login">
         <div class="field">
-          <input type="text" placeholder="Nombre de usuario" />
+          <input
+            type="text"
+            placeholder="Nombre de usuario"
+            v-model="formData.identifier"
+            :class="{ error: formError.identifier }"
+          />
         </div>
         <div class="field">
-          <input type="password" placeholder="Contraseña" />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            v-model="formData.password"
+            :class="{ error: formError.password }"
+          />
         </div>
-        <button type="submit" class="ui button fluid primary">Ingresar</button>
+        <button
+          type="submit"
+          class="ui button fluid primary"
+          :class="{ loading }"
+        >
+          Ingresar
+        </button>
       </form>
       <router-link to="/register"> Crear una cuenta </router-link>
     </div>
@@ -17,11 +33,46 @@
 </template>
 
 <script>
+import { ref } from "vue";
+import * as Yup from "yup";
 import BasicLayout from "../layouts/BasicLayout.vue";
+
 export default {
   name: "Login",
   components: {
     BasicLayout,
+  },
+  setup() {
+    let formData = ref({});
+    let formError = ref({});
+    let loading = ref(false);
+
+    const schemaForm = Yup.object().shape({
+      identifier: Yup.string().required(true),
+      password: Yup.string().required(true),
+    });
+
+    const login = async () => {
+      formError.value = {};
+      console.log("Login");
+      console.log(formData.value);
+
+      try {
+        await schemaForm.validate(formData.value, { abortEarly: false });
+        console.log("ok");
+      } catch (error) {
+        error.inner.forEach((err) => {
+          formError.value[err.path] = err.message;
+        });
+      }
+    };
+
+    return {
+      formData,
+      formError,
+      loading,
+      login,
+    };
   },
 };
 </script>
