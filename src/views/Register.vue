@@ -27,7 +27,11 @@
             :class="{ error: formError.password }"
           />
         </div>
-        <button type="submit" class="ui button fluid primary">
+        <button
+          type="submit"
+          class="ui button fluid primary"
+          :class="{ loading }"
+        >
           Crear usuario
         </button>
       </form>
@@ -38,8 +42,10 @@
 
 <script>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import BasicLayout from "../layouts/BasicLayout.vue";
 import * as Yup from "yup";
+import { registerApi } from "../api/user";
 
 export default {
   name: "Register",
@@ -49,6 +55,8 @@ export default {
   setup() {
     let formData = ref({});
     let formError = ref({});
+    let loading = ref(false);
+    const router = useRouter();
 
     const schemaForm = Yup.object().shape({
       username: Yup.string().required(true),
@@ -58,21 +66,30 @@ export default {
 
     const register = async () => {
       formError.value = {};
+      loading.value = true;
 
       try {
         await schemaForm.validate(formData.value, { abortEarly: false });
-        console.log("Todo ok");
+        try {
+          // registrar y mandar a la pagina de login
+          const response = await registerApi(formData.value);
+          router.push("/login");
+        } catch (error) {
+          console.log(error);
+        }
       } catch (error) {
         error.inner.forEach((err) => {
           formError.value[err.path] = err.message;
         });
       }
+      loading.value = false;
     };
 
     return {
       register,
       formData,
       formError,
+      loading,
     };
   },
 };
