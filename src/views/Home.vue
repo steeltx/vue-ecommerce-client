@@ -1,11 +1,16 @@
 <template>
-  <div class="home">
-   <h1>Home</h1>
-  </div>
+  <BasicLayout>
+    <h2>Estamos en home</h2>
+  </BasicLayout>
 </template>
 
 <script>
+import BasicLayout from "../layouts/BasicLayout.vue";
+
 export default {
-  name: 'Home'
+  name: 'Home',
+  components:{
+    BasicLayout
+  }
 }
 </script>
