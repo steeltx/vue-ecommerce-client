@@ -9,7 +9,7 @@
       </div>
       <div class="description">$ {{ product.price }} MXN</div>
     </div>
-    <div class="ui button primary">
+    <div class="ui button primary" @click="addProductCart(product.id)">
       Comprar
     </div>
   </div>
@@ -17,6 +17,7 @@
 
 <script>
 import { API_URL } from "../utils/constans";
+import { addProductCartApi } from "../api/cart";
 
 export default {
   name: "Product",
@@ -24,22 +25,25 @@ export default {
     product: Object,
   },
   setup(props) {
-
+    const addProductCart = (idProduct) => {
+      addProductCartApi(idProduct);
+    };
     return {
       API_URL,
+      addProductCart,
     };
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.product{
-  &:hover{
-    .ui.button{
+.product {
+  &:hover {
+    .ui.button {
       min-height: 36px;
     }
   }
-  .ui.button{
+  .ui.button {
     max-height: 0;
     min-height: 0;
     overflow: hidden;
