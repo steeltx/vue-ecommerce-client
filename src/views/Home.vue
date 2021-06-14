@@ -3,7 +3,7 @@
     <h1>Últimos productos</h1>
     <div class="ui grid">
       <div
-        class="sixten wide mobile eight wide tablet four wide compuer column"
+        class="sixten wide mobile eight wide tablet four wide computer column"
         v-for="product in products"
         :key="product.id"
       >
