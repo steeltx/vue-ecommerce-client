@@ -1,11 +1,13 @@
 <template>
   <BasicLayout>
     <h1>Estamos en la categoria</h1>
+    {{products}}
   </BasicLayout>
 </template>
 
 <script>
-import { onMounted } from "vue";
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import BasicLayout from "../layouts/BasicLayout.vue";
 import { getProductsCategory } from "../api/product";
 
@@ -16,14 +18,28 @@ export default {
   },
   watch: {
     $route(to, from) {
-      console.log(to);
+      // al cambiar la url, volver a consultar los productos
+      this.getProducts(to.params.category);
     },
   },
   setup() {
-    onMounted(async () => {
-      const response = await getProductsCategory("cereales");
-      console.log(response);
+    const { params } = useRoute();
+    let products = ref(null);
+
+    onMounted(() => {
+      // al cargar inicialmente, obtener los productos
+      getProducts(params.category);
     });
+
+    const getProducts = async (category) => {
+      const response = await getProductsCategory(category);
+      products.value = response;
+    };
+
+    return {
+      getProducts,
+      products,
+    };
   },
 };
 </script>
