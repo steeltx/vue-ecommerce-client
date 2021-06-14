@@ -10,7 +10,7 @@
           />
           <template v-for="category in categories" :key="category.id">
             <router-link class="item" :to="category.slug">
-              {{category.title}}
+              {{ category.title }}
             </router-link>
           </template>
         </router-link>
@@ -21,7 +21,7 @@
         </router-link>
         <template v-if="token">
           <router-link class="item" to="/orders">Pedidos</router-link>
-          <span class="ui item cart">
+          <span class="ui item cart" @click="openCart">
             <i class="shopping cart icon"></i>
           </span>
           <span class="ui item logout" @click="logout">
@@ -37,12 +37,14 @@
 import { ref, onMounted } from "vue";
 import { getTokenApi, deleteTokenApi } from "../api/token";
 import { getCategoriesApi } from "../api/category";
+import { useStore } from "vuex";
 
 export default {
   name: "Menu",
   setup() {
     const token = getTokenApi();
     let categories = ref(null);
+    const store = useStore();
 
     onMounted(async () => {
       const response = await getCategoriesApi();
@@ -54,10 +56,15 @@ export default {
       location.replace("/");
     };
 
+    const openCart = () => {
+      store.commit("setShowCart", true);
+    };
+
     return {
       token,
       logout,
-      categories
+      categories,
+      openCart
     };
   },
 };
