@@ -24,7 +24,6 @@ export default {
     product: Object,
   },
   setup(props) {
-    console.log(props.product);
 
     return {
       API_URL,
