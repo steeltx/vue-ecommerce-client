@@ -3,7 +3,7 @@
   <div class="cart" :class="{ open: showCart }">
     <div>
       <CartHeader :closeCart="closeCart" />
-      <CartBody :products="products" />
+      <CartBody :products="products" :reloadCartFn="reloadCartFn" />
     </div>
   </div>
 </template>
@@ -25,6 +25,7 @@ export default {
     const store = useStore();
     const showCart = computed(() => store.state.showCart);
     let products = ref(null);
+    let reloadCart = ref(false);
 
     const getProductsCart = async () => {
       const response = await getProductsCartApi();
@@ -33,6 +34,7 @@ export default {
 
     watchEffect(() => {
       showCart.value;
+      reloadCart.value;
       getProductsCart();
     });
 
@@ -40,10 +42,15 @@ export default {
       store.commit("setShowCart", false);
     };
 
+    const reloadCartFn = () => {
+      reloadCart.value = !reloadCart.value;
+    };
+
     return {
       showCart,
       closeCart,
       products,
+      reloadCartFn
     };
   },
 };

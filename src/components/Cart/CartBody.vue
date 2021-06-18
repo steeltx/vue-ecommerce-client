@@ -12,7 +12,13 @@
           <p>$ {{ product.price }}</p>
 
           <div class="quantity">
-            <button class="ui button primary" size="large">+</button>
+            <button
+              class="ui button primary"
+              size="large"
+              @click="increaseProductCart(product.id)"
+            >
+              +
+            </button>
             <p>{{ product.quantity }}</p>
             <button class="ui button primary" size="large">-</button>
           </div>
@@ -24,15 +30,23 @@
 
 <script>
 import { API_URL } from "../../utils/constans";
+import { addProductCartApi } from "../../api/cart";
 
 export default {
   name: "CartBody",
   props: {
     products: Array,
+    reloadCartFn: Function,
   },
-  setup() {
+  setup(props) {
+    const increaseProductCart = (id) => {
+      addProductCartApi(id);
+      props.reloadCartFn();
+    };
+
     return {
       API_URL,
+      increaseProductCart,
     };
   },
 };
