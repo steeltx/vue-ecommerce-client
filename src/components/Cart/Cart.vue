@@ -5,6 +5,7 @@
       <CartHeader :closeCart="closeCart" />
       <CartBody :products="products" :reloadCartFn="reloadCartFn" />
     </div>
+    <CartFooter :products="products" :closeCart="closeCart" v-if="products"/>
   </div>
 </template>
 
@@ -14,12 +15,14 @@ import { useStore } from "vuex";
 import CartHeader from "./CartHeader.vue";
 import { getProductsCartApi } from "../../api/cart";
 import CartBody from "./CartBody";
+import CartFooter from "./CartFooter.vue";
 
 export default {
   name: "Cart",
   components: {
     CartHeader,
     CartBody,
+    CartFooter
   },
   setup() {
     const store = useStore();
