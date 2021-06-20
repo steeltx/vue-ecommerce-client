@@ -61,3 +61,7 @@ export function deleteAllProductCartApi(idProduct) {
         deleteAllProductCartApi(idProduct);
     }
 }
+
+export function deleteCartApi(){
+    localStorage.removeItem(PRODUCTS);
+}
