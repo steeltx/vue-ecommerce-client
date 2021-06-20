@@ -1,5 +1,9 @@
 # ecommerce
 
+# URL DEMO
+
+Open [https://ecommerce-vue-tx.netlify.app/](https://ecommerce-vue-tx.netlify.app/)
+
 ## Project setup
 ```
 yarn install
