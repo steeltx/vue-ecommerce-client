@@ -26,7 +26,11 @@
         </tr>
       </tbody>
     </table>
-    <button class="ui button primary fluid" v-if="products.length > 0">
+    <button
+      class="ui button primary fluid"
+      v-if="products.length > 0"
+      @click="createOrder"
+    >
       Generar pedido
     </button>
     <h3 v-if="products.length < 1">No tienes productos en el carrito</h3>
@@ -35,8 +39,11 @@
 
 <script>
 import { ref, watchEffect } from "vue";
+import jwtDecode from "jwt-decode";
 import BasicLayout from "../layouts/BasicLayout.vue";
 import { getProductsCartApi, deleteAllProductCartApi } from "../api/cart";
+import { createOrderApi } from "../api/order";
+import { getTokenApi } from "../api/token";
 
 export default {
   name: "Cart",
@@ -66,10 +73,30 @@ export default {
       reloadCart.value = !reloadCart.value;
     };
 
+    const createOrder = async () => {
+      // obtener el token y el id de usuario
+      const token = getTokenApi();
+      const { id } = jwtDecode(token);
+
+      const data = {
+        users: id,
+        totalPayment: getTotal(),
+        data: products.value,
+      };
+
+      try {
+        const response = await createOrderApi(data);
+        console.log("pedido creado");
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     return {
       products,
       getTotal,
       deleteAllProductCart,
+      createOrder,
     };
   },
 };
